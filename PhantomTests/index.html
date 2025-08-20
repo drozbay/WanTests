@@ -39,7 +39,7 @@
             -webkit-text-fill-color: transparent;
         }
         
-        .summary {
+        .intro-section {
             background: #1a1a1a;
             border-radius: 10px;
             padding: 30px;
@@ -47,23 +47,29 @@
             border: 1px solid #333;
         }
         
-        .key-findings {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+        .workflow-image {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        
+        .workflow-placeholder {
+            background: #252525;
+            padding: 100px 20px;
+            text-align: center;
+            color: #666;
+            border-radius: 8px;
+            border: 2px dashed #444;
             margin: 20px 0;
         }
         
-        .finding-card {
-            background: #252525;
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .finding-card h3 {
-            color: #667eea;
-            margin-bottom: 10px;
+        .intro-text {
+            margin-top: 20px;
+            font-size: 1.1em;
+            line-height: 1.8;
         }
         
         .test-grid {
@@ -100,31 +106,14 @@
             color: #667eea;
         }
         
-        .test-status {
+        .test-speed {
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 0.9em;
             font-weight: 600;
-        }
-        
-        .status-best {
-            background: #10b981;
-            color: white;
-        }
-        
-        .status-good {
-            background: #3b82f6;
-            color: white;
-        }
-        
-        .status-mediocre {
-            background: #f59e0b;
-            color: white;
-        }
-        
-        .status-poor {
-            background: #ef4444;
-            color: white;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            color: #aaa;
         }
         
         .test-details {
@@ -149,6 +138,7 @@
         .detail-value {
             font-weight: 600;
             color: #e0e0e0;
+            font-size: 0.95em;
         }
         
         .video-container {
@@ -215,36 +205,27 @@
     <div class="container">
         <header>
             <h1>Phantom Conditioning Test Results</h1>
-            <p>Comprehensive testing of conditioning strategies for WanPhantom Subject-to-Video model</p>
+            <p>Testing conditioning strategies for WanPhantom Subject-to-Video model</p>
         </header>
         
-        <div class="summary">
-            <h2>Executive Summary</h2>
-            <div class="key-findings">
-                <div class="finding-card">
-                    <h3>🏆 Best Overall</h3>
-                    <p><strong>ConditioningCombine</strong> (Test #7)</p>
-                    <p>CFG: 3.5 | Combines negative_text + negative_img_text</p>
-                    <p>Best balance of quality and resemblance</p>
-                </div>
-                <div class="finding-card">
-                    <h3>⚡ Performance</h3>
-                    <p>CondCombine is <strong>30% faster</strong> than Dual CFG</p>
-                    <p>Standard CFG close second in quality</p>
-                </div>
-                <div class="finding-card">
-                    <h3>⚠️ Paper Implementation</h3>
-                    <p>Original weights (7.5/3.0) cause artifacts</p>
-                    <p>"Blue eyes" → glowing effect (over-guidance)</p>
-                </div>
+        <div class="intro-section">
+            <h2>Test Motivation</h2>
+            <img src="assets/workflow_1.png" alt="ComfyUI Workflow" class="workflow-image">
+            <div class="intro-text">
+                <p>The WanPhantom Subject-to-Video model outputs three conditioning types: positive (text+image), negative_text (image-only with negative text), and negative_img_text (negative text with zeroed image embeddings). The paper describes a hierarchical dual-CFG approach using all three conditionings with specific weights (7.5 for text, 3.0 for image guidance).</p>
+                <p><em>The full ComfyUI node workflow used for these tests is embedded in the PNG image above.</em></p>
+                
+                <p>These tests explore different conditioning combinations to find the optimal approach for balancing subject resemblance with prompt following. Testing includes the paper's recommended Dual CFG setup, standard CFG with various negative conditioning choices, and the empirically discovered ConditioningCombine approach that merges the two negative outputs.</p>
+                
+                <p>All tests use the same reference image, prompt ("A woman with blue eyes..."), and seed for direct comparison. Generation speeds vary significantly between approaches due to the number of conditioning passes required.</p>
             </div>
         </div>
         
         <div class="filter-controls">
             <button class="filter-btn active" onclick="filterTests('all')">All Tests</button>
-            <button class="filter-btn" onclick="filterTests('best')">Best Performers</button>
             <button class="filter-btn" onclick="filterTests('dual')">Dual CFG</button>
             <button class="filter-btn" onclick="filterTests('standard')">Standard CFG</button>
+            <button class="filter-btn" onclick="filterTests('fast')">Faster Methods</button>
         </div>
         
         <div class="test-grid" id="testGrid">
@@ -253,7 +234,7 @@
     </div>
     
     <script>
-        // Test data - UPDATE THIS ARRAY TO ADD NEW TESTS
+        // Test data with expanded notes from Discord discussion
         const testData = [
             {
                 id: "00005",
@@ -261,8 +242,8 @@
                 condition: "Dual CFG, regular",
                 cfg: "cond: 7.5, cond2_neg: 3.0",
                 sampler: "euler, eta=0.0",
-                results: "Mediocre video quality but not good resemblance. Over following of prompt (\"blue eyes\" causes glowing blue eyes)",
-                status: "mediocre",
+                speed: "Slowest (3 passes)",
+                results: "Paper's recommended weights. Mediocre video quality with poor resemblance. Severe over-following of prompt - 'blue eyes' instruction causes unnatural glowing blue eyes effect. This demonstrates the over-guidance issue when using the theoretical weights from the paper. The harsh artifacts suggest the guidance scales are too aggressive for practical use.",
                 videoUrl: "assets/WanPhantom_Test_00005.mp4"
             },
             {
@@ -271,18 +252,18 @@
                 condition: "P: positive, N: negative_text",
                 cfg: "cfg: 3.5",
                 sampler: "euler, eta=0.0",
-                results: "Good video quality, not very good resemblance beyond superficial characteristics",
-                status: "mediocre",
+                speed: "Fast (2 passes)",
+                results: "Standard CFG using only negative_text (which includes image embeddings). Good video quality but noticeably worse resemblance - only captures superficial characteristics. This confirms that using only the image-conditioned negative loses the unconditional baseline needed for proper guidance.",
                 videoUrl: "assets/WanPhantom_Test_00006.mp4"
             },
             {
                 id: "00007",
                 filename: "WanPhantom_Test_00007",
-                condition: "P: positive, N: CondCombine: negative_text + negative_img_text",
+                condition: "P: positive, N: CondCombine (negative_text + negative_img_text)",
                 cfg: "cfg: 3.5",
                 sampler: "euler, eta=0.0",
-                results: "Good video quality and good resemblance to person and clothing",
-                status: "best",
+                speed: "Fast (2 passes)",
+                results: "Empirically discovered approach combining both negative outputs. Achieves good video quality and good resemblance to both person and clothing. Despite not making theoretical sense (combining image-only and unconditional), this produces the most balanced results. Possibly works by creating an averaged intermediate conditioning state. 30% faster than Dual CFG methods.",
                 videoUrl: "assets/WanPhantom_Test_00007.mp4"
             },
             {
@@ -291,8 +272,8 @@
                 condition: "Dual CFG, regular",
                 cfg: "cond: 3.0, cond2_neg: 1.5",
                 sampler: "euler, eta=0.0",
-                results: "Good video quality and mediocre resemblance to person and clothing",
-                status: "mediocre",
+                speed: "Slowest (3 passes)",
+                results: "Reduced weights attempting to fix over-guidance. Good video quality but only mediocre resemblance to person and clothing. Better than paper weights but still underperforms CondCombine method despite being more computationally expensive.",
                 videoUrl: "assets/WanPhantom_Test_00008.mp4"
             },
             {
@@ -301,8 +282,8 @@
                 condition: "Dual CFG, nested",
                 cfg: "cond: 3.0, cond2_neg: 1.5",
                 sampler: "euler, eta=0.0",
-                results: "Pretty decent video quality and pretty good resemblance but not as good as previous. A bit too much contrast on face, clothing resemblance is mediocre.",
-                status: "mediocre",
+                speed: "Slowest (3 passes)",
+                results: "Nested variant of Dual CFG with reduced weights. Pretty decent video quality and resemblance, but introduces too much contrast on face. Clothing resemblance remains mediocre. The nested approach applies guidance differently but doesn't resolve the fundamental issues.",
                 videoUrl: "assets/WanPhantom_Test_00009.mp4"
             },
             {
@@ -311,8 +292,8 @@
                 condition: "Dual CFG, regular",
                 cfg: "cond: 3.5, cond2_neg: 3.5",
                 sampler: "euler, eta=0.0",
-                results: "Very good video quality and resemblance to person and clothing",
-                status: "good",
+                speed: "Slowest (3 passes)",
+                results: "Balanced equal weights for both guidance scales. Achieves very good video quality and resemblance to person and clothing. This is the best Dual CFG configuration tested, suggesting equal weights work better than the paper's asymmetric approach. However, still 30% slower than CondCombine with similar quality.",
                 videoUrl: "assets/WanPhantom_Test_00010.mp4"
             },
             {
@@ -321,8 +302,8 @@
                 condition: "Dual CFG, nested",
                 cfg: "cond: 3.5, cond2_neg: 3.5",
                 sampler: "euler, eta=0.0",
-                results: "Poor video quality (burned contrasty look) extremely bad person resemblance, (glowing blue eyes), very mediocre clothing resemblance",
-                status: "poor",
+                speed: "Slowest (3 passes)",
+                results: "Nested variant with balanced weights. Poor video quality with burned, high-contrast appearance. Extremely bad person resemblance with glowing blue eyes returning. Very mediocre clothing resemblance. Demonstrates that nested mode is problematic with higher guidance values.",
                 videoUrl: "assets/WanPhantom_Test_00011.mp4"
             },
             {
@@ -331,35 +312,21 @@
                 condition: "P: positive, N: negative_img_text",
                 cfg: "cfg: 3.5",
                 sampler: "euler, eta=0.0",
-                results: "Very good video quality and resemblance to person and clothing",
-                status: "good",
+                speed: "Fast (2 passes)",
+                results: "Standard CFG using the true unconditional negative (zeroed images). Very good video quality and resemblance to person and clothing. This is theoretically the most straightforward approach - full conditioning vs unconditional - and performs nearly as well as CondCombine.",
                 videoUrl: "assets/WanPhantom_Test_00012.mp4"
             },
             {
                 id: "00013",
                 filename: "WanPhantom_Test_00013",
-                condition: "P: positive, N: negative_img_text with standard negative",
+                condition: "P: positive, N: negative_img_text with standard negative text",
                 cfg: "cfg: 3.5",
                 sampler: "euler, eta=0.0",
-                results: "Good video quality and good resemblance to person and clothing",
-                status: "good",
+                speed: "Fast (2 passes)",
+                results: "Standard CFG with actual negative prompt text added (not just empty). Good video quality and resemblance. Adding negative text prompts provides additional control but doesn't significantly improve over test 00012.",
                 videoUrl: "assets/WanPhantom_Test_00013.mp4"
             }
         ];
-        
-        function getStatusClass(status) {
-            return `status-${status}`;
-        }
-        
-        function getStatusLabel(status) {
-            const labels = {
-                'best': 'BEST',
-                'good': 'Good',
-                'mediocre': 'Mediocre',
-                'poor': 'Poor'
-            };
-            return labels[status] || status;
-        }
         
         function createTestCard(test) {
             const videoHtml = test.videoUrl 
@@ -367,10 +334,10 @@
                 : `<div class="video-placeholder">Video: ${test.filename}.mp4</div>`;
             
             return `
-                <div class="test-card" data-status="${test.status}" data-condition="${test.condition.toLowerCase()}">
+                <div class="test-card" data-condition="${test.condition.toLowerCase()}" data-speed="${test.speed.toLowerCase()}">
                     <div class="test-header">
                         <span class="test-number">Test #${test.id}</span>
-                        <span class="test-status ${getStatusClass(test.status)}">${getStatusLabel(test.status)}</span>
+                        <span class="test-speed">${test.speed}</span>
                     </div>
                     <div class="test-details">
                         <div class="detail-item">
@@ -390,7 +357,7 @@
                         ${videoHtml}
                     </div>
                     <div class="results-notes">
-                        <strong>Results:</strong> ${test.results}
+                        <strong>Notes:</strong> ${test.results}
                     </div>
                 </div>
             `;
@@ -418,12 +385,12 @@
             cards.forEach(card => {
                 if (filter === 'all') {
                     card.style.display = 'block';
-                } else if (filter === 'best') {
-                    card.style.display = ['best', 'good'].includes(card.dataset.status) ? 'block' : 'none';
                 } else if (filter === 'dual') {
                     card.style.display = card.dataset.condition.includes('dual') ? 'block' : 'none';
                 } else if (filter === 'standard') {
                     card.style.display = !card.dataset.condition.includes('dual') ? 'block' : 'none';
+                } else if (filter === 'fast') {
+                    card.style.display = card.dataset.speed.includes('fast') ? 'block' : 'none';
                 }
             });
         }
