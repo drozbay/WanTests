@@ -206,6 +206,7 @@
         <header>
             <h1>Phantom Conditioning Test Results</h1>
             <p>Testing conditioning strategies for WanPhantom Subject-to-Video model</p>
+            <p style="font-size: 0.9em; color: #aaa;">Last Updated: 2025-08-19</p>
         </header>
         
         <div class="intro-section">
@@ -218,6 +219,8 @@
                 <p>These tests explore different conditioning combinations to find the optimal approach for balancing subject resemblance with prompt following. Testing includes the paper's recommended Dual CFG setup, standard CFG with various negative conditioning choices, and the empirically discovered ConditioningCombine approach that merges the two negative outputs.</p>
                 
                 <p>All tests use the same reference image, prompt ("A woman with blue eyes..."), and seed for direct comparison. Generation speeds vary significantly between approaches due to the number of conditioning passes required.</p>
+
+                <p>More tests will be added including using quality and step-distill loras.</p>
             </div>
         </div>
         
