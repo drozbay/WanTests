@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phantom Conditioning Test Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .summary {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid #333;
+        }
+        
+        .key-findings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .finding-card {
+            background: #252525;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .finding-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .test-grid {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .test-card {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #333;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .test-number {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .test-status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+        
+        .status-best {
+            background: #10b981;
+            color: white;
+        }
+        
+        .status-good {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .status-mediocre {
+            background: #f59e0b;
+            color: white;
+        }
+        
+        .status-poor {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .test-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            background: #252525;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        
+        .detail-label {
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: #e0e0e0;
+        }
+        
+        .video-container {
+            margin-top: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .video-placeholder {
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #252525;
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .results-notes {
+            margin-top: 15px;
+            padding: 15px;
+            background: #252525;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 20px;
+            border: 1px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .test-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Phantom Conditioning Test Results</h1>
+            <p>Comprehensive testing of conditioning strategies for WanPhantom Subject-to-Video model</p>
+        </header>
+        
+        <div class="summary">
+            <h2>Executive Summary</h2>
+            <div class="key-findings">
+                <div class="finding-card">
+                    <h3>🏆 Best Overall</h3>
+                    <p><strong>ConditioningCombine</strong> (Test #7)</p>
+                    <p>CFG: 3.5 | Combines negative_text + negative_img_text</p>
+                    <p>Best balance of quality and resemblance</p>
+                </div>
+                <div class="finding-card">
+                    <h3>⚡ Performance</h3>
+                    <p>CondCombine is <strong>30% faster</strong> than Dual CFG</p>
+                    <p>Standard CFG close second in quality</p>
+                </div>
+                <div class="finding-card">
+                    <h3>⚠️ Paper Implementation</h3>
+                    <p>Original weights (7.5/3.0) cause artifacts</p>
+                    <p>"Blue eyes" → glowing effect (over-guidance)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="filter-controls">
+            <button class="filter-btn active" onclick="filterTests('all')">All Tests</button>
+            <button class="filter-btn" onclick="filterTests('best')">Best Performers</button>
+            <button class="filter-btn" onclick="filterTests('dual')">Dual CFG</button>
+            <button class="filter-btn" onclick="filterTests('standard')">Standard CFG</button>
+        </div>
+        
+        <div class="test-grid" id="testGrid">
+            <!-- Tests will be inserted here by JavaScript -->
+        </div>
+    </div>
+    
+    <script>
+        // Test data - UPDATE THIS ARRAY TO ADD NEW TESTS
+        const testData = [
+            {
+                id: "00005",
+                filename: "WanPhantom_Test_00005",
+                condition: "Dual CFG, regular",
+                cfg: "cond: 7.5, cond2_neg: 3.0",
+                sampler: "euler, eta=0.0",
+                results: "Mediocre video quality but not good resemblance. Over following of prompt (\"blue eyes\" causes glowing blue eyes)",
+                status: "mediocre",
+                videoUrl: "assets/WanPhantom_Test_00005.mp4"
+            },
+            {
+                id: "00006",
+                filename: "WanPhantom_Test_00006",
+                condition: "P: positive, N: negative_text",
+                cfg: "cfg: 3.5",
+                sampler: "euler, eta=0.0",
+                results: "Good video quality, not very good resemblance beyond superficial characteristics",
+                status: "mediocre",
+                videoUrl: "assets/WanPhantom_Test_00006.mp4"
+            },
+            {
+                id: "00007",
+                filename: "WanPhantom_Test_00007",
+                condition: "P: positive, N: CondCombine: negative_text + negative_img_text",
+                cfg: "cfg: 3.5",
+                sampler: "euler, eta=0.0",
+                results: "Good video quality and good resemblance to person and clothing",
+                status: "best",
+                videoUrl: "assets/WanPhantom_Test_00007.mp4"
+            },
+            {
+                id: "00008",
+                filename: "WanPhantom_Test_00008",
+                condition: "Dual CFG, regular",
+                cfg: "cond: 3.0, cond2_neg: 1.5",
+                sampler: "euler, eta=0.0",
+                results: "Good video quality and mediocre resemblance to person and clothing",
+                status: "mediocre",
+                videoUrl: "assets/WanPhantom_Test_00008.mp4"
+            },
+            {
+                id: "00009",
+                filename: "WanPhantom_Test_00009",
+                condition: "Dual CFG, nested",
+                cfg: "cond: 3.0, cond2_neg: 1.5",
+                sampler: "euler, eta=0.0",
+                results: "Pretty decent video quality and pretty good resemblance but not as good as previous. A bit too much contrast on face, clothing resemblance is mediocre.",
+                status: "mediocre",
+                videoUrl: "assets/WanPhantom_Test_00009.mp4"
+            },
+            {
+                id: "00010",
+                filename: "WanPhantom_Test_00010",
+                condition: "Dual CFG, regular",
+                cfg: "cond: 3.5, cond2_neg: 3.5",
+                sampler: "euler, eta=0.0",
+                results: "Very good video quality and resemblance to person and clothing",
+                status: "good",
+                videoUrl: "assets/WanPhantom_Test_00010.mp4"
+            },
+            {
+                id: "00011",
+                filename: "WanPhantom_Test_00011",
+                condition: "Dual CFG, nested",
+                cfg: "cond: 3.5, cond2_neg: 3.5",
+                sampler: "euler, eta=0.0",
+                results: "Poor video quality (burned contrasty look) extremely bad person resemblance, (glowing blue eyes), very mediocre clothing resemblance",
+                status: "poor",
+                videoUrl: "assets/WanPhantom_Test_00011.mp4"
+            },
+            {
+                id: "00012",
+                filename: "WanPhantom_Test_00012",
+                condition: "P: positive, N: negative_img_text",
+                cfg: "cfg: 3.5",
+                sampler: "euler, eta=0.0",
+                results: "Very good video quality and resemblance to person and clothing",
+                status: "good",
+                videoUrl: "assets/WanPhantom_Test_00012.mp4"
+            },
+            {
+                id: "00013",
+                filename: "WanPhantom_Test_00013",
+                condition: "P: positive, N: negative_img_text with standard negative",
+                cfg: "cfg: 3.5",
+                sampler: "euler, eta=0.0",
+                results: "Good video quality and good resemblance to person and clothing",
+                status: "good",
+                videoUrl: "assets/WanPhantom_Test_00013.mp4"
+            }
+        ];
+        
+        function getStatusClass(status) {
+            return `status-${status}`;
+        }
+        
+        function getStatusLabel(status) {
+            const labels = {
+                'best': 'BEST',
+                'good': 'Good',
+                'mediocre': 'Mediocre',
+                'poor': 'Poor'
+            };
+            return labels[status] || status;
+        }
+        
+        function createTestCard(test) {
+            const videoHtml = test.videoUrl 
+                ? `<video controls><source src="${test.videoUrl}" type="video/mp4"></video>`
+                : `<div class="video-placeholder">Video: ${test.filename}.mp4</div>`;
+            
+            return `
+                <div class="test-card" data-status="${test.status}" data-condition="${test.condition.toLowerCase()}">
+                    <div class="test-header">
+                        <span class="test-number">Test #${test.id}</span>
+                        <span class="test-status ${getStatusClass(test.status)}">${getStatusLabel(test.status)}</span>
+                    </div>
+                    <div class="test-details">
+                        <div class="detail-item">
+                            <div class="detail-label">Condition</div>
+                            <div class="detail-value">${test.condition}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">CFG Settings</div>
+                            <div class="detail-value">${test.cfg}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Sampler</div>
+                            <div class="detail-value">${test.sampler}</div>
+                        </div>
+                    </div>
+                    <div class="video-container">
+                        ${videoHtml}
+                    </div>
+                    <div class="results-notes">
+                        <strong>Results:</strong> ${test.results}
+                    </div>
+                </div>
+            `;
+        }
+        
+        function renderTests() {
+            const grid = document.getElementById('testGrid');
+            grid.innerHTML = testData.map(test => createTestCard(test)).join('');
+        }
+        
+        function filterTests(filter) {
+            const cards = document.querySelectorAll('.test-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // Update active button
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(filter) || 
+                    (filter === 'all' && btn.textContent === 'All Tests')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Filter cards
+            cards.forEach(card => {
+                if (filter === 'all') {
+                    card.style.display = 'block';
+                } else if (filter === 'best') {
+                    card.style.display = ['best', 'good'].includes(card.dataset.status) ? 'block' : 'none';
+                } else if (filter === 'dual') {
+                    card.style.display = card.dataset.condition.includes('dual') ? 'block' : 'none';
+                } else if (filter === 'standard') {
+                    card.style.display = !card.dataset.condition.includes('dual') ? 'block' : 'none';
+                }
+            });
+        }
+        
+        // Initialize
+        renderTests();
+    </script>
+</body>
+</html>
