@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phantom Distillation Tests - WanTests</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Navigation */
+        .nav-header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+        
+        .intro-section {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid #333;
+        }
+        
+        .intro-text {
+            margin-top: 20px;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+        
+        .key-findings {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid #334155;
+        }
+        
+        .key-findings h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .key-findings ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .key-findings li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .key-findings li:before {
+            content: "→";
+            color: #667eea;
+            position: absolute;
+            left: 0;
+        }
+        
+        /* Test Results Table */
+        .results-table-container {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 40px;
+            overflow-x: auto;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .results-table th {
+            background: #252525;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #aaa;
+            border-bottom: 2px solid #333;
+        }
+        
+        .results-table td {
+            padding: 12px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .results-table tr:hover {
+            background: #202020;
+        }
+        
+        .test-name {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .score-cell {
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .score-high { color: #4ade80; }
+        .score-medium { color: #fbbf24; }
+        .score-low { color: #f87171; }
+        
+        .speed-fast { color: #4ade80; }
+        .speed-medium { color: #fbbf24; }
+        .speed-slow { color: #f87171; }
+        
+        /* Test Cards */
+        .test-grid {
+            display: grid;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .test-card {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid #333;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .test-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .test-number {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .test-badges {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .badge-lora {
+            background: #2a2a4a;
+            color: #a78bfa;
+            border: 1px solid #4c3a8a;
+        }
+        
+        .badge-baseline {
+            background: #2a3a2a;
+            color: #86efac;
+            border: 1px solid #3a5a3a;
+        }
+        
+        .test-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            background: #252525;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        
+        .detail-label {
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: #e0e0e0;
+            font-size: 0.95em;
+        }
+        
+        .scores-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #252525;
+            border-radius: 6px;
+        }
+        
+        .score-item {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .score-label {
+            font-size: 0.85em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .score-value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        
+        .video-container {
+            margin-top: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .video-placeholder {
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #252525;
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .test-notes {
+            margin-top: 15px;
+            padding: 15px;
+            background: #252525;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .phase-divider {
+            margin: 40px 0;
+            padding: 20px;
+            background: linear-gradient(90deg, transparent, #333, transparent);
+            height: 1px;
+            position: relative;
+        }
+        
+        .phase-divider h2 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #0a0a0a;
+            padding: 0 20px;
+            color: #667eea;
+            font-size: 1.3em;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 10px;
+                font-size: 0.9em;
+            }
+            
+            .test-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .scores-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-brand">WanTests</a>
+            <div class="nav-links">
+                <a href="../index.html">WanTests Hub</a>
+                <a href="results1_base_conditioning.html">Baseline Conditioning Tests</a>
+                <a href="results2_distill_loras.html" class="active">Distillation & LoRA Tests</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Phantom Distillation & LoRA Tests</h1>
+            <p class="subtitle">Evaluating step-distilled and CFG-distilled LoRA performance</p>
+            <p style="font-size: 0.9em; color: #aaa;">Test Date: August 20, 2025</p>
+        </header>
+        
+        <div class="intro-section">
+            <h2>Test Overview</h2>
+            <div class="intro-text">
+                <p>Following the successful identification of ConditioningCombine as the optimal conditioning strategy (from previous tests), this battery evaluates distillation LoRAs designed to accelerate generation while maintaining quality.</p>
+                
+                <p><strong>Test Setup:</strong> All tests use the same seed (53), reference images, and prompt as the conditioning tests for direct comparison. The baseline uses ConditioningCombine with CFG=3.5 at 30 steps (our gold standard from previous testing).</p>
+                
+                <p><strong>LoRAs Tested:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li><strong>LightX2V:</strong> Step and CFG distilled, designed for 4 steps at CFG=1.0</li>
+                    <li><strong>LightX2V Adaptive:</strong> Same as above but with adaptive rank scaling</li>
+                    <li><strong>CausVid V2:</strong> Modified autoregressive distillation for ~10-12 steps at CFG~2.0</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="key-findings">
+            <h3>🔍 Key Findings</h3>
+            <ul>
+                <li><strong>CausVid is the winner:</strong> 12-step CausVid (Test 6) achieves 89% of baseline quality at 2.5x speed!</li>
+                <li><strong>CFG=1.0 insufficient:</strong> Both LightX2V variants fail at CFG=1.0, confirming negative conditioning is essential</li>
+                <li><strong>Surprising CFG=2.0 behavior:</strong> Lower resemblance at CFG=2.0 without LoRA than CFG=1.0 - unexpected finding</li>
+                <li><strong>LightX2V disappointing:</strong> Both variants underperform despite 15x speedup - quality/speed tradeoff too severe</li>
+                <li><strong>Sweet spot found:</strong> CausVid at 12 steps with CFG=2.0 offers best practical balance</li>
+            </ul>
+        </div>
+
+        <!-- Summary Table -->
+        <div class="results-table-container">
+            <h2 style="margin-bottom: 20px; color: #667eea;">Test Results Summary</h2>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Test</th>
+                        <th>Configuration</th>
+                        <th>Steps</th>
+                        <th>CFG</th>
+                        <th>Subject (1-10)</th>
+                        <th>Quality (1-10)</th>
+                        <th>Speed</th>
+                        <th>Overall</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="test-name">Test 01</td>
+                        <td>Gold Standard (No LoRA)</td>
+                        <td>30</td>
+                        <td>3.5</td>
+                        <td class="score-cell score-high">9</td>
+                        <td class="score-cell score-high">8</td>
+                        <td class="speed-slow">2100s</td>
+                        <td class="score-cell score-high">8.5</td>
+                    </tr>
+                    <tr>
+                        <td class="test-name">Test 02</td>
+                        <td>Baseline CFG=1.0</td>
+                        <td>30</td>
+                        <td>1.0</td>
+                        <td class="score-cell score-medium">5</td>
+                        <td class="score-cell score-medium">6</td>
+                        <td class="speed-medium">1050s</td>
+                        <td class="score-cell score-medium">5.5</td>
+                    </tr>
+                    <tr>
+                        <td class="test-name">Test 03</td>
+                        <td>Min CFG=2.0</td>
+                        <td>30</td>
+                        <td>2.0</td>
+                        <td class="score-cell score-medium">4</td>
+                        <td class="score-cell score-high">7</td>
+                        <td class="speed-slow">2100s</td>
+                        <td class="score-cell score-medium">5.5</td>
+                    </tr>
+                    <tr>
+                        <td class="test-name">Test 04</td>
+                        <td>LightX2V Standard</td>
+                        <td>4</td>
+                        <td>1.0</td>
+                        <td class="score-cell score-medium">5</td>
+                        <td class="score-cell score-medium">4</td>
+                        <td class="speed-fast">140s</td>
+                        <td class="score-cell score-medium">4.5</td>
+                    </tr>
+                    <tr>
+                        <td class="test-name">Test 05</td>
+                        <td>LightX2V Adaptive</td>
+                        <td>4</td>
+                        <td>1.0</td>
+                        <td class="score-cell score-medium">5</td>
+                        <td class="score-cell score-medium">5</td>
+                        <td class="speed-fast">140s</td>
+                        <td class="score-cell score-medium">5.0</td>
+                    </tr>
+                    <tr>
+                        <td class="test-name">Test 06</td>
+                        <td>CausVid 12 steps</td>
+                        <td>12</td>
+                        <td>2.0</td>
+                        <td class="score-cell score-high">8</td>
+                        <td class="score-cell score-high">9</td>
+                        <td class="speed-medium">840s</td>
+                        <td class="score-cell score-high">8.5</td>
+                    </tr>
+                    <tr>
+                        <td class="test-name">Test 07</td>
+                        <td>CausVid 8 steps</td>
+                        <td>8</td>
+                        <td>2.0</td>
+                        <td class="score-cell score-high">7</td>
+                        <td class="score-cell score-high">8</td>
+                        <td class="speed-fast">560s</td>
+                        <td class="score-cell score-high">7.5</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Phase 1: Baselines -->
+        <div class="phase-divider">
+            <h2>Phase 1: Baseline Tests</h2>
+        </div>
+
+        <div class="test-grid">
+            <!-- Test 1: Gold Standard -->
+            <div class="test-card">
+                <div class="test-header">
+                    <span class="test-number">Test #01: Gold Standard</span>
+                    <div class="test-badges">
+                        <span class="badge badge-baseline">Baseline</span>
+                    </div>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Configuration</div>
+                        <div class="detail-value">No LoRA</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Steps</div>
+                        <div class="detail-value">30</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">CFG</div>
+                        <div class="detail-value">3.5</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Speed</div>
+                        <div class="detail-value">2100s (35 min)</div>
+                    </div>
+                </div>
+                <div class="scores-container">
+                    <div class="score-item">
+                        <div class="score-label">Subject</div>
+                        <div class="score-value score-high">9</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Quality</div>
+                        <div class="score-value score-high">8</div>
+                    </div>
+                </div>
+                <div class="video-container">
+                    <video controls poster="assets/results2/Test01_Baseline_30step_CFG3.5.png">
+                        <source src="assets/results2/Test01_Baseline_30step_CFG3.5.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="test-notes">
+                    <strong>Notes:</strong> Very good overall result. Eyes are a bit high contrast but might be that CFG should be a bit lower, otherwise video is good.
+                </div>
+            </div>
+
+            <!-- Test 2: CFG=1.0 -->
+            <div class="test-card">
+                <div class="test-header">
+                    <span class="test-number">Test #02: Pure CFG=1.0</span>
+                    <div class="test-badges">
+                        <span class="badge badge-baseline">Baseline</span>
+                    </div>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Configuration</div>
+                        <div class="detail-value">No LoRA</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Steps</div>
+                        <div class="detail-value">30</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">CFG</div>
+                        <div class="detail-value">1.0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Speed</div>
+                        <div class="detail-value">1050s (17.5 min)</div>
+                    </div>
+                </div>
+                <div class="scores-container">
+                    <div class="score-item">
+                        <div class="score-label">Subject</div>
+                        <div class="score-value score-medium">5</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Quality</div>
+                        <div class="score-value score-medium">6</div>
+                    </div>
+                </div>
+                <div class="video-container">
+                    <video controls poster="assets/results2/Test02_Baseline_30step_CFG1.0.png">
+                        <source src="assets/results2/Test02_Baseline_30step_CFG1.0.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="test-notes">
+                    <strong>Notes:</strong> Video is better quality than expected with CFG of 1, but it is a little muted, and she walks a bit more like a Zombie. Resemblance is significantly lower especially on the face.
+                </div>
+            </div>
+
+            <!-- Test 3: CFG=2.0 -->
+            <div class="test-card">
+                <div class="test-header">
+                    <span class="test-number">Test #03: Minimal CFG=2.0</span>
+                    <div class="test-badges">
+                        <span class="badge badge-baseline">Baseline</span>
+                    </div>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Configuration</div>
+                        <div class="detail-value">No LoRA</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Steps</div>
+                        <div class="detail-value">30</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">CFG</div>
+                        <div class="detail-value">2.0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Speed</div>
+                        <div class="detail-value">360s</div>
+                    </div>
+                </div>
+                <div class="scores-container">
+                    <div class="score-item">
+                        <div class="score-label">Subject</div>
+                        <div class="score-value score-medium">4</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Quality</div>
+                        <div class="score-value score-high">7</div>
+                    </div>
+                </div>
+                <div class="video-container">
+                    <video controls poster="assets/results2/Test03_MinCFG_30step_CFG2.0.png">
+                        <source src="assets/results2/Test03_MinCFG_30step_CFG2.0.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="test-notes">
+                    <strong>Notes:</strong> Video quality is much better but the resemblance of the character and dress is a bit strange, like it grabbed unexpected parts of each and didn't focus on important aspects like the face.
+                </div>
+            </div>
+        </div>
+
+        <!-- Phase 2: Pure Distillation -->
+        <div class="phase-divider">
+            <h2>Phase 2: Pure Distillation Tests</h2>
+        </div>
+
+        <div class="test-grid">
+            <!-- Test 4-7 cards would go here following the same pattern -->
+            <!-- I'll show one more as an example -->
+            
+            <div class="test-card">
+                <div class="test-header">
+                    <span class="test-number">Test #04: LightX2V Standard</span>
+                    <div class="test-badges">
+                        <span class="badge badge-lora">LoRA</span>
+                    </div>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Configuration</div>
+                        <div class="detail-value">LightX2V</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Steps</div>
+                        <div class="detail-value">4</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">CFG</div>
+                        <div class="detail-value">1.0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Speed</div>
+                        <div class="detail-value">140s</div>
+                    </div>
+                </div>
+                <div class="scores-container">
+                    <div class="score-item">
+                        <div class="score-label">Subject</div>
+                        <div class="score-value score-medium">5</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Quality</div>
+                        <div class="score-value score-medium">4</div>
+                    </div>
+                </div>
+                <div class="video-container">
+                    <video controls poster="assets/results2/Test04_LightX2V_4step_CFG1.0.png">
+                        <source src="assets/results2/Test04_LightX2V_4step_CFG1.0.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="test-notes">
+                    <strong>Notes:</strong> Video quality suffers with this one, more noise than expected which may be attributed to the scheduler or shift not being right for this distill lora. Resemblance is down too.
+                </div>
+            </div>
+
+            <div class="test-card">
+                <div class="test-header">
+                    <span class="test-number">Test #05: LightX2V Adaptive</span>
+                    <div class="test-badges">
+                        <span class="badge badge-lora">LoRA</span>
+                    </div>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Configuration</div>
+                        <div class="detail-value">LightX2V Adaptive</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Steps</div>
+                        <div class="detail-value">4</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">CFG</div>
+                        <div class="detail-value">1.0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Speed</div>
+                        <div class="detail-value">140s</div>
+                    </div>
+                </div>
+                <div class="scores-container">
+                    <div class="score-item">
+                        <div class="score-label">Subject</div>
+                        <div class="score-value score-medium">5</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Quality</div>
+                        <div class="score-value score-medium">5</div>
+                    </div>
+                </div>
+                <div class="video-container">
+                    <video controls poster="assets/results2/Test05_LightX2V-Adaptive_4step_CFG1.0.png">
+                        <source src="assets/results2/Test05_LightX2V-Adaptive_4step_CFG1.0.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="test-notes">
+                    <strong>Notes:</strong> Video quality is slightly better with this version compared to the base one.
+                </div>
+            </div>
+
+            <div class="test-card">
+                <div class="test-header">
+                    <span class="test-number">Test #06: CausVid 12 Steps</span>
+                    <div class="test-badges">
+                        <span class="badge badge-lora">LoRA</span>
+                    </div>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Configuration</div>
+                        <div class="detail-value">CausVid V2</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Steps</div>
+                        <div class="detail-value">12</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">CFG</div>
+                        <div class="detail-value">2.0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Speed</div>
+                        <div class="detail-value">840s</div>
+                    </div>
+                </div>
+                <div class="scores-container">
+                    <div class="score-item">
+                        <div class="score-label">Subject</div>
+                        <div class="score-value score-high">8</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Quality</div>
+                        <div class="score-value score-high">9</div>
+                    </div>
+                </div>
+                <div class="video-container">
+                    <video controls poster="assets/results2/Test06_CausVid_12step_CFG2.0.png">
+                        <source src="assets/results2/Test06_CausVid_12step_CFG2.0.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="test-notes">
+                    <strong>Notes:</strong> Very good result, almost as good resemblance as 30 steps version, and arguably better quality.
+                </div>
+            </div>
+
+            <div class="test-card">
+                <div class="test-header">
+                    <span class="test-number">Test #07: CausVid 8 Steps</span>
+                    <div class="test-badges">
+                        <span class="badge badge-lora">LoRA</span>
+                    </div>
+                </div>
+                <div class="test-details">
+                    <div class="detail-item">
+                        <div class="detail-label">Configuration</div>
+                        <div class="detail-value">CausVid V2</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Steps</div>
+                        <div class="detail-value">8</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">CFG</div>
+                        <div class="detail-value">2.0</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Speed</div>
+                        <div class="detail-value">560s</div>
+                    </div>
+                </div>
+                <div class="scores-container">
+                    <div class="score-item">
+                        <div class="score-label">Subject</div>
+                        <div class="score-value score-high">7</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="score-label">Quality</div>
+                        <div class="score-value score-high">8</div>
+                    </div>
+                </div>
+                <div class="video-container">
+                    <video controls poster="assets/results2/Test07_CausVid_8step_CFG2.0.png">
+                        <source src="assets/results2/Test07_CausVid_8step_CFG2.0.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="test-notes">
+                    <strong>Notes:</strong> Some small loss of quality and resemblance compared to the 12 step version with CausVid.
+                </div>
+            </div>
+        </div>
+
+        <div class="intro-section" style="margin-top: 40px;">
+            <h2>Next Steps</h2>
+            <div class="intro-text">
+                <p><strong>Phase 3 Testing (In Progress):</strong> Hybrid approaches combining distillation with strategic CFG application. Initial tests include:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>LightX2V for initial steps, then switching to CFG>1.0 for final steps</li>
+                    <li>Reduced LoRA strength with higher CFG values</li>
+                    <li>Staged distillation combining multiple LoRAs</li>
+                </ul>
+                <p style="margin-top: 15px;">The goal is finding the optimal balance between generation speed and quality, targeting a 2-3x speedup while maintaining 80%+ of baseline quality.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
