@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RES4LYF Sampler Tests - WanTests</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Navigation */
+        .nav-header {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-brand {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            color: #667eea;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #aaa;
+            font-size: 1.1em;
+        }
+        
+        .intro-section {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid #333;
+        }
+        
+        .intro-text {
+            margin-top: 20px;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+        
+        .test-parameters {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 1px solid #334155;
+        }
+        
+        .test-parameters h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .parameter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .parameter-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+        
+        .parameter-label {
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 3px;
+        }
+        
+        .parameter-value {
+            color: #e0e0e0;
+            font-weight: 600;
+        }
+        
+        /* Category Sections */
+        .category-section {
+            margin-bottom: 30px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid #333;
+            overflow: hidden;
+        }
+        
+        .category-header {
+            padding: 20px 25px;
+            background: #252525;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+        
+        .category-header:hover {
+            background: #2a2a2a;
+        }
+        
+        .category-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .category-count {
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+        }
+        
+        .expand-icon {
+            color: #667eea;
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+        
+        .category-header.collapsed .expand-icon {
+            transform: rotate(-90deg);
+        }
+        
+        .category-content {
+            padding: 25px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            max-height: 2000px;
+            overflow: visible;
+            transition: max-height 0.5s ease-in-out, padding 0.3s;
+        }
+        
+        .category-content.collapsed {
+            max-height: 0;
+            padding: 0 25px;
+            overflow: hidden;
+        }
+        
+        /* Video Cards */
+        .sampler-card {
+            background: #252525;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .sampler-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .sampler-name {
+            padding: 10px 15px;
+            background: #2a2a2a;
+            font-weight: 600;
+            color: #a78bfa;
+            font-size: 0.95em;
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
+        
+        .video-wrapper {
+            position: relative;
+            background: #000;
+        }
+        
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Quick Stats */
+        .quick-stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            margin: 30px 0;
+            background: #1a1a1a;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        /* Control Buttons */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 10px 20px;
+            background: #252525;
+            border: 1px solid #667eea;
+            color: #667eea;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+        
+        .control-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 10px;
+                font-size: 0.9em;
+            }
+            
+            .category-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .parameter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-brand">WanTests</a>
+            <div class="nav-links">
+                <a href="../index.html">WanTests Hub</a>
+                <a href="results1_samplers.html" class="active">RES4LYF Sampler Tests</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>RES4LYF Sampler Extreme Distillation Tests</h1>
+            <p class="subtitle">Testing 119 samplers under 4-step CFG=1.0 distilled conditions</p>
+            <p style="font-size: 0.9em; color: #aaa;">Test Date: 21 September 2025</p>
+        </header>
+        
+        <div class="intro-section">
+            <h2>Test Overview</h2>
+            <div class="intro-text">
+                <p><strong>NOTE:</strong> This page was vibe-coded, there may be inaccuracies or other weirdness.</p>
+
+                <p>This comprehensive test explores how 119 different samplers from the RES4LYF sampler pack perform under extreme distillation conditions using the Wan2.2 VACE model with LightX2V LoRA.</p>
+                
+                <p><strong>Research Question:</strong> While these samplers were not designed for such aggressive distillation (4 steps, CFG=1.0), some may perform remarkably well, especially those with built-in sub-steps that could provide additional refinement within the limited step budget.</p>
+                
+                <p><strong>Unique Setup:</strong> The test uses continuous video generation with 9-frame overlap between segments, dynamic end-frame guidance, and a split between High Noise (2 steps) and Low Noise (2 steps) VACE models.</p>
+                
+                <div style="margin-top: 20px; padding: 15px; background: rgba(102, 126, 234, 0.1); border: 1px solid #667eea; border-radius: 8px;">
+                    <strong>📄 ComfyUI Workflow:</strong> 
+                    <a href="assets/results3/vace_results1_distill_sample_tests.json" download style="color: #a78bfa; text-decoration: none; font-weight: 600; margin-left: 10px;">
+                        Download Test Workflow JSON
+                    </a>
+                    <span style="color: #888; font-size: 0.9em; margin-left: 10px;">(Right-click → Save as to download)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-parameters">
+            <h3>🔬 Test Parameters</h3>
+            <div class="parameter-grid">
+                <div class="parameter-item">
+                    <div class="parameter-label">Model</div>
+                    <div class="parameter-value">Wan2.2 VACE (High→Low split)</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-label">LoRA</div>
+                    <div class="parameter-value">LightX2V Distillation</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-label">Total Steps</div>
+                    <div class="parameter-value">4 (2 High + 2 Low)</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-label">CFG Scale</div>
+                    <div class="parameter-value">1.0</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-label">Scheduler</div>
+                    <div class="parameter-value">Linear-Quadratic [1.0, 0.9, 0.8, 0.55, 0.0]</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-label">SDE Eta</div>
+                    <div class="parameter-value">0.25</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-label">Dtype</div>
+                    <div class="parameter-value">float32</div>
+                </div>
+                <div class="parameter-item">
+                    <div class="parameter-label">Frames</div>
+                    <div class="parameter-value">81 per segment (9 overlap)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-stats">
+            <div class="stat-item">
+                <div class="stat-value">119</div>
+                <div class="stat-label">Samplers Tested</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">6</div>
+                <div class="stat-label">Categories</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">4</div>
+                <div class="stat-label">Steps Only</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">1.0</div>
+                <div class="stat-label">CFG Scale</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" onclick="expandAll()">Expand All</button>
+            <button class="control-btn" onclick="collapseAll()">Collapse All</button>
+            <button class="control-btn" onclick="playAllVisible()">Play All Visible</button>
+            <button class="control-btn" onclick="pauseAll()">Pause All</button>
+        </div>
+
+        <!-- Multistep Samplers -->
+        <div class="category-section">
+            <div class="category-header" onclick="toggleCategory(this)">
+                <div class="category-title">
+                    <span>Multistep Samplers</span>
+                    <span class="category-count">10</span>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="category-content">
+                <div class="sampler-card">
+                    <div class="sampler-name">res_2m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_2m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_3m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_3m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">dpmpp_2m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_dpmpp_2m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">dpmpp_3m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_dpmpp_3m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">abnorsett_2m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_abnorsett_2m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">abnorsett_3m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_abnorsett_3m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">abnorsett_4m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_abnorsett_4m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">deis_2m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_deis_2m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">deis_3m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_deis_3m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">deis_4m</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_deis_4m_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exponential Samplers -->
+        <div class="category-section">
+            <div class="category-header collapsed" onclick="toggleCategory(this)">
+                <div class="category-title">
+                    <span>Exponential Samplers</span>
+                    <span class="category-count">46</span>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="category-content collapsed">
+                <div class="sampler-card">
+                    <div class="sampler-name">res_2s_rkmk2e</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_2s_rkmk2e_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_2s_stable</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_2s_stable_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_3s_non-monotonic</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_3s_non-monotonic_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_3s_alt</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_3s_alt_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_3s_cox_matthews</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_3s_cox_matthews_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_3s_lie</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_3s_lie_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_3s_sunstar</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_3s_sunstar_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_3s_strehmel_weiner</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_3s_strehmel_weiner_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_4s_krogstad</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_4s_krogstad_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_4s_krogstad_alt</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_4s_krogstad_alt_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_4s_strehmel_weiner</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_4s_strehmel_weiner_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_4s_strehmel_weiner_alt</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_4s_strehmel_weiner_alt_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_4s_cox_matthews</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_4s_cox_matthews_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_4s_cfree4</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_4s_cfree4_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_4s_friedli</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_4s_friedli_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_4s_minchev</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_4s_minchev_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_4s_munthe-kaas</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_4s_munthe-kaas_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_5s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_5s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_5s_hochbruck-ostermann</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_5s_hochbruck-ostermann_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_6s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_6s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_8s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_8s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_8s_alt</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_8s_alt_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_10s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_10s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_15s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_15s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">res_16s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_res_16s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">etdrk2_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_etdrk2_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">etdrk3_a_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_etdrk3_a_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">etdrk3_b_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_etdrk3_b_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">etdrk4_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_etdrk4_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">etdrk4_4s_alt</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_etdrk4_4s_alt_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">dpmpp_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_dpmpp_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">dpmpp_sde_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_dpmpp_sde_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">dpmpp_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_dpmpp_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lawson2a_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lawson2a_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lawson2b_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lawson2b_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lawson4_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lawson4_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lawson41-gen_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lawson41-gen_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lawson41-gen-mod_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lawson41-gen-mod_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">ddim</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_ddim_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hybrid Samplers -->
+        <div class="category-section">
+            <div class="category-header collapsed" onclick="toggleCategory(this)">
+                <div class="category-title">
+                    <span>Hybrid Samplers</span>
+                    <span class="category-count">9</span>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="category-content collapsed">
+                <div class="sampler-card">
+                    <div class="sampler-name">pec423_2h2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_pec423_2h2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">pec433_2h3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_pec433_2h3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">abnorsett2_1h2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_abnorsett2_1h2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">abnorsett3_2h2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_abnorsett3_2h2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">abnorsett4_3h2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_abnorsett4_3h2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lawson42-gen-mod_1h4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lawson42-gen-mod_1h4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lawson43-gen-mod_2h4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lawson43-gen-mod_2h4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lawson44-gen-mod_3h4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lawson44-gen-mod_3h4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lawson45-gen-mod_4h4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lawson45-gen-mod_4h4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Linear Samplers -->
+        <div class="category-section">
+            <div class="category-header collapsed" onclick="toggleCategory(this)">
+                <div class="category-title">
+                    <span>Linear Samplers</span>
+                    <span class="category-count">20</span>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="category-content collapsed">
+                <div class="sampler-card">
+                    <div class="sampler-name">ralston_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_ralston_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">ralston_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_ralston_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">ralston_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_ralston_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">midpoint_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_midpoint_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">heun_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_heun_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">heun_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_heun_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">houwen-wray_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_houwen-wray_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">kutta_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_kutta_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">ssprk3_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_ssprk3_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">ssprk4_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_ssprk4_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">rk38_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_rk38_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">rk4_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_rk4_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">rk5_7s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_rk5_7s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">rk6_7s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_rk6_7s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">bogacki-shampine_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_bogacki-shampine_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">bogacki-shampine_7s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_bogacki-shampine_7s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">dormand-prince_6s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_dormand-prince_6s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">dormand-prince_13s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_dormand-prince_13s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">tsi_7s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_tsi_7s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">euler</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_euler_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagonal Implicit Samplers -->
+        <div class="category-section">
+            <div class="category-header collapsed" onclick="toggleCategory(this)">
+                <div class="category-title">
+                    <span>Diagonal Implicit Samplers</span>
+                    <span class="category-count">8</span>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="category-content collapsed">
+                <div class="sampler-card">
+                    <div class="sampler-name">irk_exp_diag_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_irk_exp_diag_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">kraaijevanger_spijker_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_kraaijevanger_spijker_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">qin_zhang_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_qin_zhang_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">pareschi_russo_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_pareschi_russo_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">pareschi_russo_alt_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_pareschi_russo_alt_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">crouzeix_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_crouzeix_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">crouzeix_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_crouzeix_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">crouzeix_3s_alt</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_crouzeix_3s_alt_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fully Implicit Samplers -->
+        <div class="category-section">
+            <div class="category-header collapsed" onclick="toggleCategory(this)">
+                <div class="category-title">
+                    <span>Fully Implicit Samplers</span>
+                    <span class="category-count">26</span>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="category-content collapsed">
+                <div class="sampler-card">
+                    <div class="sampler-name">gauss-legendre_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_gauss-legendre_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">gauss-legendre_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_gauss-legendre_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">gauss-legendre_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_gauss-legendre_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">gauss-legendre_4s_alternating_a</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_gauss-legendre_4s_alternating_a_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">gauss-legendre_4s_ascending_a</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_gauss-legendre_4s_ascending_a_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">gauss-legendre_4s_alt</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_gauss-legendre_4s_alt_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">gauss-legendre_5s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_gauss-legendre_5s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">gauss-legendre_5s_ascending</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_gauss-legendre_5s_ascending_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">radau_ia_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_radau_ia_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">radau_ia_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_radau_ia_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">radau_iia_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_radau_iia_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">radau_iia_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_radau_iia_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">radau_iia_3s_alt</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_radau_iia_3s_alt_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">radau_iia_5s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_radau_iia_5s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">radau_iia_7s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_radau_iia_7s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">radau_iia_9s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_radau_iia_9s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">radau_iia_11s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_radau_iia_11s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiia_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiia_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiia_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiia_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiia_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiia_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiib_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiib_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiib_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiib_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiib_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiib_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiic_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiic_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiic_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiic_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiic_4s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiic_4s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiic_star_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiic_star_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiic_star_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiic_star_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiid_2s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiid_2s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+                <div class="sampler-card">
+                    <div class="sampler-name">lobatto_iiid_3s</div>
+                    <div class="video-wrapper">
+                        <video controls>
+                            <source src="assets/results1/VaceCont_lobatto_iiid_3s_00001.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="intro-section" style="margin-top: 40px;">
+            <h2>Analysis Notes</h2>
+            <div class="intro-text">
+                <p><strong>Initial Observations:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px; list-style: disc;">
+                    <li>Samplers with built-in sub-steps (marked with _Xs notation) may perform better under these extreme conditions</li>
+                    <li>The SDE eta value of 0.25 adds stochasticity which may help or hinder depending on the sampler</li>
+                    <li>Some implicit methods might struggle with only 4 steps despite their theoretical advantages</li>
+                    <li>The High→Low model transition at step 2 may favor certain sampler architectures</li>
+                </ul>
+                
+                <p style="margin-top: 15px;"><strong>Next Steps:</strong> Detailed analysis of results to identify which sampler families perform best under distillation, followed by eta=0.0 comparison tests for top performers.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCategory(header) {
+            const content = header.nextElementSibling;
+            header.classList.toggle('collapsed');
+            content.classList.toggle('collapsed');
+        }
+        
+        function expandAll() {
+            document.querySelectorAll('.category-header').forEach(header => {
+                header.classList.remove('collapsed');
+                header.nextElementSibling.classList.remove('collapsed');
+            });
+        }
+        
+        function collapseAll() {
+            document.querySelectorAll('.category-header').forEach(header => {
+                header.classList.add('collapsed');
+                header.nextElementSibling.classList.add('collapsed');
+            });
+        }
+        
+        function playAllVisible() {
+            document.querySelectorAll('.category-content:not(.collapsed) video').forEach(video => {
+                video.play();
+            });
+        }
+        
+        function pauseAll() {
+            document.querySelectorAll('video').forEach(video => {
+                video.pause();
+            });
+        }
+    </script>
+</body>
+</html>
