@@ -336,6 +336,12 @@
                 <p><strong>Research Question:</strong> While these samplers were not designed for such aggressive distillation (4 steps, CFG=1.0), some may perform remarkably well, especially those with built-in sub-steps that could provide additional refinement within the limited step budget.</p>
                 
                 <p><strong>Unique Setup:</strong> The test uses continuous video generation with 9-frame overlap between segments, dynamic end-frame guidance, and a split between High Noise (2 steps) and Low Noise (2 steps) VACE models.</p>
+
+                    <div style="margin: 2em 0 1em 0; text-align: center;">
+                        <h2 style="font-size:1.3em; margin-bottom:0.5em;">Workflow Visualization</h2>
+                        <img src="assets/results1/vace_results1_distill_sample_tests.png" alt="Workflow embedding visualization" style="max-width: 90%; border: 1px solid #ccc; box-shadow: 2px 2px 8px #aaa;">
+                        <p style="font-style: italic; color: #555; margin-top:0.5em;">The workflow is embedded in the image above for reference.</p>
+                    </div>
                 
                 <div style="margin-top: 20px; padding: 15px; background: rgba(102, 126, 234, 0.1); border: 1px solid #667eea; border-radius: 8px;">
                     <strong>📄 ComfyUI Workflow:</strong> 
