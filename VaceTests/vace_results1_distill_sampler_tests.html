@@ -190,7 +190,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
-            max-height: 2000px;
+            /* Increased max-height to ensure all videos are visible in large categories */
+            max-height: 10000px;
             overflow: visible;
             transition: max-height 0.5s ease-in-out, padding 0.3s;
         }
